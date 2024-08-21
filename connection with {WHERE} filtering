@@ -1,0 +1,22 @@
+from google.colab import auth
+import google.auth
+from google.cloud import bigquery
+from oauth2client.client import GoogleCredentials
+
+auth.authenticate_user()
+project_id = 'dala-rdcc'
+bigquery_client = bigquery.Client(project = project_id)
+dataset_id = 'junior_da_py'
+table_id = 'customer_shopping_data'
+
+query = (
+    'SELECT *'
+    'FROM `dala-rdcc.junior_da_py.customer_shopping_data`'
+    'WHERE invoice_date < "2023-01-01" AND invoice_date >= "2022-01-01"' #дата працює лише з подвійними лапками
+    'ORDER BY invoice_date ASC'
+)
+
+query_job = bigquery_client.query(query)
+
+customer_shopping_data = query_job.result().to_dataframe()
+customer_shopping_data
